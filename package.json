@@ -1,0 +1,31 @@
+{
+  "name": "app-update-test",
+  "version": "1.0.0",
+  "description": "Updatable Electron app with GitHub releases",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64",
+    "publish": "electron-builder --win --x64 --publish always"
+  },
+  "build": {
+    "appId": "com.jencendencia.app-update-test",
+    "productName": "App Update Test",
+    "publish": {
+      "provider": "github",
+      "owner": "jencendencia",
+      "repo": "app-update-test"
+    },
+    "win": {
+      "target": "nsis"
+    }
+  },
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "dependencies": {
+    "electron-log": "^5.4.4",
+    "electron-updater": "^6.0.0"
+  }
+}

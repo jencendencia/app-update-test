@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>App Update Test</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #1a1a2e;
+      color: #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container { text-align: center; }
+    h1 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .version { color: #888; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    button {
+      background: #0f3460;
+      color: #eee;
+      border: none;
+      padding: 0.6rem 1.8rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover { background: #16213e; }
+    #status {
+      margin-top: 1.2rem;
+      font-size: 0.85rem;
+      color: #aaa;
+      min-height: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>App Update Test</h1>
+    <p class="version" id="version"></p>
+    <button id="updateBtn">Check for Updates</button>
+    <p id="status">Click the button to check for updates.</p>
+  </div>
+  <script src="renderer.js"></script>
+</body>
+</html>
