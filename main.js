@@ -6,6 +6,11 @@ autoUpdater.logger = require('electron-log');
 autoUpdater.logger.transports.file.level = 'info';
 autoUpdater.autoDownload = false;
 
+autoUpdater.setFeedURL({
+  provider: 'generic',
+  url: 'https://github.com/jencendencia/app-update-test/releases/latest/download',
+});
+
 const CHECK_TIMEOUT_MS = 15000;
 let checkTimeout = null;
 
