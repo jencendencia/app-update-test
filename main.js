@@ -6,6 +6,9 @@ autoUpdater.logger = require('electron-log');
 autoUpdater.logger.transports.file.level = 'info';
 autoUpdater.autoDownload = false;
 
+const CHECK_TIMEOUT_MS = 15000;
+let checkTimeout = null;
+
 let mainWindow;
 
 function createWindow() {
@@ -58,5 +61,19 @@ autoUpdater.on('error', (err) => {
 });
 
 ipcMain.on('check-for-update', () => {
-  autoUpdater.checkForUpdates();
+  if (checkTimeout) clearTimeout(checkTimeout);
+
+  sendStatus('Checking for update...');
+
+  checkTimeout = setTimeout(() => {
+    sendStatus('Update check timed out. GitHub may be slow or unreachable. Try again later.');
+    checkTimeout = null;
+  }, CHECK_TIMEOUT_MS);
+
+  autoUpdater.checkForUpdates().finally(() => {
+    if (checkTimeout) {
+      clearTimeout(checkTimeout);
+      checkTimeout = null;
+    }
+  });
 });
