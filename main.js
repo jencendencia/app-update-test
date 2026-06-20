@@ -1,15 +1,14 @@
-const { app, BrowserWindow, ipcMain, net } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
 
 autoUpdater.logger = require('electron-log');
 autoUpdater.logger.transports.file.level = 'info';
 autoUpdater.autoDownload = false;
-
-const CHECK_TIMEOUT_MS = 10000;
-const UPDATE_URL = 'https://github.com/jencendencia/app-update-test/releases/latest/download/latest.yml';
+autoUpdater.forceDevUpdateConfig = true;
 
 let mainWindow;
+let downloadInProgress = false;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -25,7 +24,16 @@ function createWindow() {
   mainWindow.loadFile('index.html');
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+
+  // Configure the GitHub release provider (repo is public, no token needed)
+  autoUpdater.setFeedURL({
+    provider: 'github',
+    owner: 'jencendencia',
+    repo: 'app-update-test',
+  });
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
@@ -37,66 +45,32 @@ function sendStatus(text) {
 
 ipcMain.handle('get-version', () => app.getVersion());
 
-ipcMain.on('check-for-update', async () => {
-  sendStatus('Checking for update...');
-
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), CHECK_TIMEOUT_MS);
-
-    const response = await net.fetch(UPDATE_URL, {
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      sendStatus(`Error: GitHub returned status ${response.status}`);
-      return;
-    }
-
-    const data = await response.text();
-    const versionMatch = data.match(/^version:\s*(\S+)/m);
-
-    if (!versionMatch) {
-      sendStatus('Error: could not parse update info');
-      return;
-    }
-
-    const remoteVersion = versionMatch[1];
-    const currentVersion = app.getVersion();
-
-    if (remoteVersion === currentVersion) {
-      sendStatus(`No update available (current: v${currentVersion})`);
-      return;
-    }
-
-    const pathMatch = data.match(/^path:\s*(\S+)/m);
-    const shaMatch = data.match(/^sha512:\s*(\S+)/m);
-    const fileName = pathMatch ? pathMatch[1] : `App-Update-Test-Setup-${remoteVersion}.exe`;
-    const sha512 = shaMatch ? shaMatch[1] : '';
-    const downloadUrl = `https://github.com/jencendencia/app-update-test/releases/download/v${remoteVersion}/${fileName}`;
-
-    sendStatus(`Update available: v${remoteVersion}. Downloading...`);
-
-    autoUpdater.updateInfoAndProvider = {
-      info: {
-        version: remoteVersion,
-        files: [{ url: downloadUrl, sha512 }],
-        path: fileName,
-        sha512,
-        releaseDate: new Date().toISOString(),
-      },
-      provider: { getUpdateFile: () => {} },
-    };
-    autoUpdater.downloadUpdate();
-
-  } catch (e) {
-    if (e.name === 'AbortError') {
-      sendStatus('Update check timed out (10s). Check your network and try again.');
-    } else {
-      sendStatus(`Error: ${e.message}`);
-    }
+ipcMain.on('check-for-update', () => {
+  if (downloadInProgress) {
+    sendStatus('Download already in progress...');
+    return;
   }
+  sendStatus('Checking for update...');
+  autoUpdater.checkForUpdates().catch((e) => {
+    sendStatus(`Error: ${e.message}`);
+  });
+});
+
+autoUpdater.on('checking-for-update', () => {
+  sendStatus('Checking for update...');
+});
+
+autoUpdater.on('update-available', (info) => {
+  sendStatus(`Update available: v${info.version}. Downloading...`);
+  downloadInProgress = true;
+  autoUpdater.downloadUpdate().catch((e) => {
+    downloadInProgress = false;
+    sendStatus(`Download error: ${e.message}`);
+  });
+});
+
+autoUpdater.on('update-not-available', (info) => {
+  sendStatus(`No update available (current: v${app.getVersion()})`);
 });
 
 autoUpdater.on('download-progress', (progress) => {
@@ -104,9 +78,11 @@ autoUpdater.on('download-progress', (progress) => {
 });
 
 autoUpdater.on('update-downloaded', (info) => {
-  sendStatus(`Update v${info.version} downloaded. Restart to install.`);
+  downloadInProgress = false;
+  sendStatus(`Update v${info.version} downloaded. Click restart to install.`);
 });
 
 autoUpdater.on('error', (err) => {
+  downloadInProgress = false;
   sendStatus(`Error: ${err.message}`);
 });
