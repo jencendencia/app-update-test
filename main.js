@@ -41,14 +41,21 @@ ipcMain.handle('get-version', () => app.getVersion());
 ipcMain.on('check-for-update', () => {
   sendStatus('Checking for update...');
 
-  const req = https.get(UPDATE_URL, { timeout: CHECK_TIMEOUT_MS }, (res) => {
+  const req = https.get(UPDATE_URL, {
+    timeout: CHECK_TIMEOUT_MS,
+    headers: { 'Accept-Encoding': 'identity' },
+  }, (res) => {
     let data = '';
     res.on('data', (chunk) => data += chunk);
     res.on('end', () => {
       try {
+        if (res.statusCode !== 200) {
+          sendStatus(`Error: GitHub returned status ${res.statusCode}`);
+          return;
+        }
         const versionMatch = data.match(/^version:\s*(\S+)/m);
         if (!versionMatch) {
-          sendStatus('Error: could not parse update info');
+          sendStatus(`Error: could not parse update info (status ${res.statusCode})`);
           return;
         }
         const remoteVersion = versionMatch[1];
