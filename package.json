@@ -1,6 +1,6 @@
 {
   "name": "app-update-test",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Updatable Electron app with GitHub releases",
   "main": "main.js",
   "scripts": {

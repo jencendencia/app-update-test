@@ -37,10 +37,44 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
+      padding: 2rem;
     }
-    .home .icon { font-size: 3rem; }
-    .home h2 { font-size: 1.3rem; font-weight: 400; }
+    .home-card {
+      background: #16213e;
+      border-radius: 16px;
+      padding: 2.5rem 3rem;
+      text-align: center;
+      border: 1px solid #0f3460;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    .home .icon {
+      font-size: 4rem;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(0 4px 8px rgba(15, 52, 96, 0.5));
+    }
+    .home h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #e94560, #0f3460);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    .home p {
+      color: #888;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .home .badge {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.25rem 0.8rem;
+      background: #0f3460;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: #aaa;
+    }
     .settings {
       flex-direction: column;
       align-items: center;
@@ -75,8 +109,12 @@
   </div>
 
   <div class="tab-content home active" id="tab-home">
-    <div class="icon">&#9733;</div>
-    <h2>Welcome to App Update Test</h2>
+    <div class="home-card">
+      <div class="icon">&#9889;</div>
+      <h2>App Update Test</h2>
+      <p>An updatable Electron application<br/>powered by GitHub Releases.</p>
+      <span class="badge" id="homeVersion">v1.0.7</span>
+    </div>
   </div>
 
   <div class="tab-content settings" id="tab-settings">

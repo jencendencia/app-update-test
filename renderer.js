@@ -11,6 +11,7 @@ document.querySelectorAll('.tab-btn').forEach((btn) => {
 // Version display
 window.electronAPI.getVersion().then((version) => {
   document.getElementById('version').textContent = `v${version}`;
+  document.getElementById('homeVersion').textContent = `v${version}`;
 });
 
 // Update check
