@@ -1,4 +1,6 @@
-document.getElementById('version').textContent = `v${window.electronAPI?.version || '1.0.0'}`;
+window.electronAPI.getVersion().then((version) => {
+  document.getElementById('version').textContent = `v${version}`;
+});
 
 document.getElementById('updateBtn').addEventListener('click', () => {
   document.getElementById('status').textContent = 'Checking...';
