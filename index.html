@@ -11,13 +11,45 @@
       background: #1a1a2e;
       color: #eee;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column;
       height: 100vh;
     }
-    .container { text-align: center; }
-    h1 { font-size: 1.4rem; margin-bottom: 0.5rem; }
-    .version { color: #888; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .tab-bar {
+      display: flex;
+      background: #16213e;
+      border-bottom: 1px solid #0f3460;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 0.7rem;
+      background: transparent;
+      color: #888;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { color: #eee; background: #1a1a2e; }
+    .tab-btn.active { color: #eee; border-bottom: 2px solid #0f3460; background: #1a1a2e; }
+    .tab-content { display: none; flex: 1; }
+    .tab-content.active { display: flex; }
+    .home {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .home .icon { font-size: 3rem; }
+    .home h2 { font-size: 1.3rem; font-weight: 400; }
+    .settings {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 0.5rem;
+      padding: 1rem;
+    }
+    .version { color: #888; font-size: 0.85rem; }
     button {
       background: #0f3460;
       color: #eee;
@@ -27,22 +59,32 @@
       border-radius: 6px;
       cursor: pointer;
     }
-    button:hover { background: #16213e; }
+    button:hover { background: #1a1a52; }
     #status {
-      margin-top: 1.2rem;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: #aaa;
       min-height: 2rem;
+      max-width: 300px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>App Update Test</h1>
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="home">Home</button>
+    <button class="tab-btn" data-tab="settings">Settings</button>
+  </div>
+
+  <div class="tab-content home active" id="tab-home">
+    <div class="icon">&#9733;</div>
+    <h2>Welcome to App Update Test</h2>
+  </div>
+
+  <div class="tab-content settings" id="tab-settings">
     <p class="version" id="version"></p>
     <button id="updateBtn">Check for Updates</button>
     <p id="status">Click the button to check for updates.</p>
   </div>
+
   <script src="renderer.js"></script>
 </body>
 </html>
