@@ -1,6 +1,6 @@
 {
   "name": "app-update-test",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Updatable Electron app with GitHub releases",
   "main": "main.js",
   "scripts": {
@@ -15,7 +15,7 @@
       "provider": "github",
       "owner": "jencendencia",
       "repo": "app-update-test",
-      "draft": false
+      "releaseType": "release"
     },
     "win": {
       "target": "nsis"

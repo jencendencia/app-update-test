@@ -106,6 +106,7 @@
   <div class="tab-bar">
     <button class="tab-btn active" data-tab="home">Home</button>
     <button class="tab-btn" data-tab="settings">Settings</button>
+    <button class="tab-btn" data-tab="about">About</button>
   </div>
 
   <div class="tab-content home active" id="tab-home">
@@ -113,7 +114,7 @@
       <div class="icon">&#9889;</div>
       <h2>App Update Test</h2>
       <p>An updatable Electron application<br/>powered by GitHub Releases.</p>
-      <span class="badge" id="homeVersion">v1.0.9</span>
+      <span class="badge" id="homeVersion">v1.0.10</span>
     </div>
   </div>
 
@@ -121,6 +122,21 @@
     <p class="version" id="version"></p>
     <button id="updateBtn">Check for Updates</button>
     <p id="status">Click the button to check for updates.</p>
+  </div>
+
+  <div class="tab-content about" id="tab-about">
+    <div style="padding:2rem;text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.6rem">
+      <div style="font-size:2.5rem">&#9432;</div>
+      <h3 style="color:#e94560;font-weight:600">App Update Test v1.0.10</h3>
+      <p style="color:#888;font-size:0.85rem;line-height:1.6;max-width:280px">
+        Built with Electron + electron-updater.<br>
+        Checks for new releases from GitHub<br>
+        and auto-downloads the installer.
+      </p>
+      <p style="color:#555;font-size:0.75rem;margin-top:0.5rem">
+        &#169; 2026 jencendencia
+      </p>
+    </div>
   </div>
 
   <script src="renderer.js"></script>
