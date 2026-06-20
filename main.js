@@ -78,13 +78,17 @@ ipcMain.on('check-for-update', async () => {
 
     sendStatus(`Update available: v${remoteVersion}. Downloading...`);
 
-    autoUpdater.downloadUpdate({
-      version: remoteVersion,
-      files: [{ url: downloadUrl, sha512 }],
-      path: fileName,
-      sha512,
-      releaseDate: new Date().toISOString(),
-    });
+    autoUpdater.updateInfoAndProvider = {
+      info: {
+        version: remoteVersion,
+        files: [{ url: downloadUrl, sha512 }],
+        path: fileName,
+        sha512,
+        releaseDate: new Date().toISOString(),
+      },
+      provider: { getUpdateFile: () => {} },
+    };
+    autoUpdater.downloadUpdate();
 
   } catch (e) {
     if (e.name === 'AbortError') {
